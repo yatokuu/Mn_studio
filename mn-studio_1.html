@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MN Studio — Студия красоты в Алматы</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --obsidian: #0D0D0D;
+    --champagne: #E8D5B7;
+    --rose: #C49A8A;
+    --cream: #FAF6F1;
+    --gold: #C9A96E;
+    --gold-light: #E8CC94;
+    --muted: #6B5E55;
+    --dark-rose: #8A5A50;
+    --glass: rgba(255,255,255,0.04);
+    --glass-border: rgba(201,169,110,0.18);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--obsidian);
+    color: var(--cream);
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 48px;
+    background: linear-gradient(to bottom, rgba(13,13,13,0.95) 0%, transparent 100%);
+    backdrop-filter: blur(0px);
+    transition: all 0.4s;
+  }
+  nav.scrolled {
+    background: rgba(13,13,13,0.96);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--glass-border);
+    padding: 14px 48px;
+  }
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px; font-weight: 600; letter-spacing: 0.12em;
+    color: var(--gold); text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links a {
+    font-size: 13px; font-weight: 400; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--champagne); text-decoration: none;
+    opacity: 0.75; transition: opacity 0.2s;
+  }
+  .nav-links a:hover { opacity: 1; color: var(--gold); }
+  .nav-cta {
+    background: var(--gold); color: var(--obsidian);
+    padding: 10px 24px; border-radius: 2px;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; text-decoration: none;
+    transition: background 0.2s, transform 0.1s;
+  }
+  .nav-cta:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh; position: relative;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    text-align: center; overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 60%, #1a0e0a 0%, #0D0D0D 70%);
+  }
+  canvas#particles { position: absolute; inset: 0; pointer-events: none; }
+
+  .hero-eyebrow {
+    font-size: 11px; font-weight: 500; letter-spacing: 0.3em;
+    text-transform: uppercase; color: var(--gold); opacity: 0.9;
+    margin-bottom: 28px; position: relative;
+  }
+  .hero-eyebrow::before, .hero-eyebrow::after {
+    content: ''; display: inline-block; width: 40px; height: 1px;
+    background: var(--gold); opacity: 0.5; vertical-align: middle; margin: 0 14px;
+  }
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(72px, 12vw, 160px);
+    font-weight: 300; font-style: italic; line-height: 0.88;
+    color: var(--cream); position: relative;
+    letter-spacing: -0.01em;
+  }
+  .hero-title span { color: var(--gold); }
+  .hero-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(16px, 2.5vw, 22px); font-weight: 300; font-style: italic;
+    color: var(--champagne); opacity: 0.7; margin-top: 24px; margin-bottom: 48px;
+    letter-spacing: 0.04em; position: relative;
+  }
+  .hero-actions { display: flex; gap: 16px; position: relative; }
+  .btn-primary {
+    background: var(--gold); color: var(--obsidian);
+    padding: 16px 40px; border: none; border-radius: 2px;
+    font-size: 13px; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; cursor: pointer; text-decoration: none;
+    transition: all 0.2s;
+  }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(201,169,110,0.3); }
+  .btn-outline {
+    background: transparent; color: var(--champagne);
+    padding: 16px 40px; border: 1px solid rgba(232,213,183,0.3); border-radius: 2px;
+    font-size: 13px; font-weight: 400; letter-spacing: 0.12em;
+    text-transform: uppercase; cursor: pointer; text-decoration: none;
+    transition: all 0.2s;
+  }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+  .hero-scroll {
+    position: absolute; bottom: 36px; left: 50%;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    opacity: 0.4; animation: float 2s ease-in-out infinite;
+  }
+  .hero-scroll span { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; }
+  .scroll-line { width: 1px; height: 40px; background: var(--gold); }
+  @keyframes float { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(-6px)} }
+
+  /* ── STATS STRIP ── */
+  .stats-strip {
+    background: var(--glass); border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border);
+    padding: 32px 0;
+  }
+  .stats-grid {
+    max-width: 1100px; margin: 0 auto; padding: 0 48px;
+    display: grid; grid-template-columns: repeat(4,1fr); gap: 24px; text-align: center;
+  }
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif; font-size: 44px; font-weight: 300;
+    color: var(--gold); line-height: 1;
+  }
+  .stat-label {
+    font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--champagne); opacity: 0.6; margin-top: 6px;
+  }
+
+  /* ── SECTIONS COMMON ── */
+  section { padding: 120px 0; }
+  .section-inner { max-width: 1100px; margin: 0 auto; padding: 0 48px; }
+  .section-eyebrow {
+    font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 16px;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 5vw, 62px); font-weight: 300; font-style: italic;
+    line-height: 1.1; color: var(--cream);
+  }
+  .section-title strong { font-weight: 600; font-style: normal; }
+  .divider { width: 60px; height: 1px; background: var(--gold); margin: 28px 0; opacity: 0.5; }
+
+  /* ── SERVICES ── */
+  #services { background: var(--cream); color: var(--obsidian); }
+  #services .section-title { color: var(--obsidian); }
+  #services .section-eyebrow { color: var(--dark-rose); }
+  #services .divider { opacity: 1; }
+  .services-grid {
+    display: grid; grid-template-columns: repeat(3,1fr); gap: 2px;
+    margin-top: 60px;
+  }
+  .service-card {
+    background: white; padding: 48px 36px;
+    cursor: pointer; transition: all 0.3s;
+    border: 2px solid transparent; position: relative; overflow: hidden;
+  }
+  .service-card::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, var(--gold) 0%, transparent 60%);
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .service-card:hover { transform: translateY(-4px); border-color: var(--gold); box-shadow: 0 20px 60px rgba(0,0,0,0.1); }
+  .service-card:hover::before { opacity: 0.04; }
+  .service-card.active { border-color: var(--gold); background: var(--obsidian); color: var(--cream); }
+  .service-icon { font-size: 36px; margin-bottom: 20px; }
+  .service-name {
+    font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600;
+    margin-bottom: 10px;
+  }
+  .service-desc { font-size: 13px; opacity: 0.6; line-height: 1.6; }
+  .service-price {
+    margin-top: 20px; font-size: 12px; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--rose); font-weight: 500;
+  }
+  .service-card.active .service-price { color: var(--gold); }
+  .service-card.active .service-name { color: var(--cream); }
+
+  /* ── MASTERS ── */
+  #masters { background: #111; }
+  .masters-intro {
+    display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 60px; gap: 40px;
+  }
+  .masters-grid {
+    display: grid; grid-template-columns: repeat(4,1fr); gap: 20px;
+  }
+  .master-card {
+    background: var(--glass); border: 1px solid var(--glass-border);
+    border-radius: 4px; overflow: hidden; cursor: pointer;
+    transition: all 0.3s;
+  }
+  .master-card:hover { border-color: var(--gold); transform: translateY(-4px); }
+  .master-card.active { border-color: var(--gold); box-shadow: 0 0 30px rgba(201,169,110,0.15); }
+  .master-avatar {
+    aspect-ratio: 3/4; background: linear-gradient(135deg, #1a1209, #2a1e10);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif; font-size: 64px; font-weight: 300;
+    color: var(--gold); opacity: 0.6; position: relative; overflow: hidden;
+  }
+  .master-avatar::after {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 60%;
+    background: linear-gradient(to top, rgba(13,13,13,0.8), transparent);
+  }
+  .master-info { padding: 20px 18px; }
+  .master-name {
+    font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600;
+    color: var(--champagne); margin-bottom: 4px;
+  }
+  .master-spec { font-size: 12px; letter-spacing: 0.06em; color: var(--gold); opacity: 0.8; }
+  .master-rating { margin-top: 12px; display: flex; align-items: center; gap: 6px; }
+  .stars { color: var(--gold); font-size: 13px; letter-spacing: 2px; }
+  .master-reviews { font-size: 11px; color: var(--champagne); opacity: 0.5; }
+  .master-badge {
+    display: inline-block; margin-top: 10px; padding: 4px 10px;
+    background: rgba(201,169,110,0.1); border: 1px solid rgba(201,169,110,0.25);
+    border-radius: 2px; font-size: 10px; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--gold);
+  }
+
+  /* ── BOOKING ── */
+  #booking {
+    background: var(--cream); color: var(--obsidian);
+    position: relative;
+  }
+  #booking::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+  }
+  #booking .section-title { color: var(--obsidian); }
+  #booking .section-eyebrow { color: var(--dark-rose); }
+  .booking-layout {
+    display: grid; grid-template-columns: 1fr 380px; gap: 60px; margin-top: 60px;
+  }
+  .booking-steps { display: flex; flex-direction: column; gap: 40px; }
+  .step { opacity: 0.3; transition: opacity 0.3s; pointer-events: none; }
+  .step.active { opacity: 1; pointer-events: all; }
+  .step.done { opacity: 0.7; pointer-events: all; }
+  .step-header { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+  .step-num {
+    width: 40px; height: 40px; border-radius: 50%;
+    border: 1.5px solid var(--gold); display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--gold); flex-shrink: 0;
+  }
+  .step.done .step-num { background: var(--gold); color: white; border-color: var(--gold); }
+  .step-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; }
+
+  /* step 1: service pills */
+  .service-pills { display: flex; flex-wrap: wrap; gap: 10px; }
+  .pill {
+    padding: 10px 20px; border: 1px solid rgba(0,0,0,0.15); border-radius: 40px;
+    font-size: 13px; cursor: pointer; transition: all 0.2s; background: white;
+    color: var(--obsidian);
+  }
+  .pill:hover { border-color: var(--gold); color: var(--dark-rose); }
+  .pill.selected { background: var(--obsidian); color: var(--gold); border-color: var(--obsidian); }
+
+  /* step 2: masters */
+  .master-mini-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+  .master-mini {
+    padding: 16px; border: 1px solid rgba(0,0,0,0.1); border-radius: 4px;
+    cursor: pointer; transition: all 0.2s; background: white; text-align: center;
+  }
+  .master-mini:hover { border-color: var(--gold); }
+  .master-mini.selected { background: var(--obsidian); border-color: var(--obsidian); color: var(--cream); }
+  .master-mini-avatar {
+    width: 56px; height: 56px; border-radius: 50%; margin: 0 auto 10px;
+    background: linear-gradient(135deg, var(--rose), var(--champagne));
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif; font-size: 24px; color: white;
+  }
+  .master-mini-name { font-weight: 600; font-size: 14px; }
+  .master-mini-spec { font-size: 11px; opacity: 0.6; margin-top: 4px; }
+
+  /* step 3: calendar */
+  .calendar { background: white; border-radius: 4px; padding: 24px; }
+  .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .cal-month { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; }
+  .cal-nav { background: none; border: 1px solid rgba(0,0,0,0.1); border-radius: 2px; width: 32px; height: 32px; cursor: pointer; font-size: 16px; }
+  .cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 4px; }
+  .cal-dow { text-align: center; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.5; padding: 4px; }
+  .cal-day {
+    aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+    font-size: 13px; cursor: pointer; border-radius: 50%; transition: all 0.15s;
+  }
+  .cal-day:hover:not(.empty):not(.past) { background: rgba(201,169,110,0.15); }
+  .cal-day.today { font-weight: 600; color: var(--dark-rose); }
+  .cal-day.selected { background: var(--obsidian) !important; color: white; }
+  .cal-day.past { opacity: 0.25; cursor: default; }
+  .cal-day.empty { cursor: default; }
+
+  .time-slots { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin-top: 16px; }
+  .time-slot {
+    padding: 10px; text-align: center; font-size: 13px;
+    border: 1px solid rgba(0,0,0,0.1); border-radius: 2px;
+    cursor: pointer; transition: all 0.15s; background: white;
+  }
+  .time-slot:hover { border-color: var(--gold); }
+  .time-slot.selected { background: var(--obsidian); color: var(--gold); border-color: var(--obsidian); }
+  .time-slot.taken { opacity: 0.3; cursor: not-allowed; text-decoration: line-through; }
+
+  /* step 4: contact */
+  .contact-form { display: flex; flex-direction: column; gap: 14px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.6; }
+  .form-group input, .form-group select, .form-group textarea {
+    padding: 14px 16px; border: 1px solid rgba(0,0,0,0.15); border-radius: 2px;
+    font-family: 'Inter', sans-serif; font-size: 14px; background: white;
+    transition: border-color 0.2s; outline: none; color: var(--obsidian);
+  }
+  .form-group input:focus, .form-group select:focus { border-color: var(--gold); }
+
+  /* booking summary */
+  .booking-summary {
+    background: var(--obsidian); color: var(--cream); border-radius: 4px;
+    padding: 36px; position: sticky; top: 100px; height: fit-content;
+    border: 1px solid var(--glass-border);
+  }
+  .summary-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; margin-bottom: 28px; }
+  .summary-row { display: flex; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid var(--glass-border); }
+  .summary-row:last-of-type { border-bottom: none; }
+  .summary-label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.5; }
+  .summary-value { font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--gold); }
+  .summary-empty { font-size: 13px; opacity: 0.4; font-style: italic; }
+  .btn-book {
+    width: 100%; padding: 18px; background: var(--gold); color: var(--obsidian);
+    border: none; border-radius: 2px; font-size: 13px; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer;
+    margin-top: 24px; transition: all 0.2s;
+  }
+  .btn-book:hover { background: var(--gold-light); }
+  .btn-book:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* ── REVIEWS ── */
+  #reviews { background: var(--obsidian); overflow: hidden; }
+  .reviews-track-wrap { overflow: hidden; margin-top: 60px; position: relative; }
+  .reviews-track-wrap::before, .reviews-track-wrap::after {
+    content: ''; position: absolute; top: 0; bottom: 0; width: 120px; z-index: 2; pointer-events: none;
+  }
+  .reviews-track-wrap::before { left: 0; background: linear-gradient(to right, var(--obsidian), transparent); }
+  .reviews-track-wrap::after { right: 0; background: linear-gradient(to left, var(--obsidian), transparent); }
+  .reviews-track {
+    display: flex; gap: 24px;
+    animation: scroll-reviews 40s linear infinite;
+    width: max-content;
+  }
+  .reviews-track:hover { animation-play-state: paused; }
+  @keyframes scroll-reviews { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+  .review-card {
+    background: var(--glass); border: 1px solid var(--glass-border); border-radius: 4px;
+    padding: 28px; width: 300px; flex-shrink: 0;
+  }
+  .review-stars { color: var(--gold); font-size: 14px; letter-spacing: 3px; margin-bottom: 14px; }
+  .review-text { font-size: 13px; line-height: 1.7; opacity: 0.75; margin-bottom: 16px; font-style: italic; }
+  .review-author { font-family: 'Cormorant Garamond', serif; font-size: 16px; font-weight: 600; color: var(--champagne); }
+  .review-date { font-size: 11px; opacity: 0.4; margin-top: 4px; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #080808; border-top: 1px solid var(--glass-border);
+    padding: 80px 0 40px;
+  }
+  .footer-inner { max-width: 1100px; margin: 0 auto; padding: 0 48px; }
+  .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px; margin-bottom: 60px; }
+  .footer-brand-name { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 300; font-style: italic; color: var(--gold); margin-bottom: 16px; }
+  .footer-tagline { font-size: 13px; opacity: 0.5; line-height: 1.7; max-width: 280px; }
+  .footer-col-title { font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
+  .footer-links { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .footer-links a { font-size: 13px; color: var(--champagne); opacity: 0.6; text-decoration: none; transition: opacity 0.2s; }
+  .footer-links a:hover { opacity: 1; color: var(--gold); }
+  .footer-bottom { border-top: 1px solid var(--glass-border); padding-top: 28px; display: flex; justify-content: space-between; align-items: center; }
+  .footer-copy { font-size: 12px; opacity: 0.35; }
+  .social-links { display: flex; gap: 20px; }
+  .social-link {
+    width: 36px; height: 36px; border: 1px solid var(--glass-border); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-size: 15px;
+    text-decoration: none; transition: all 0.2s;
+  }
+  .social-link:hover { border-color: var(--gold); background: rgba(201,169,110,0.1); }
+
+  /* ── SUCCESS MODAL ── */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1000;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s;
+  }
+  .modal-overlay.visible { opacity: 1; pointer-events: all; }
+  .modal {
+    background: var(--cream); color: var(--obsidian); border-radius: 4px;
+    padding: 60px; max-width: 480px; text-align: center;
+    transform: translateY(20px); transition: transform 0.3s;
+  }
+  .modal-overlay.visible .modal { transform: translateY(0); }
+  .modal-icon { font-size: 48px; margin-bottom: 20px; }
+  .modal-title { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 600; margin-bottom: 14px; }
+  .modal-body { font-size: 14px; opacity: 0.65; line-height: 1.7; margin-bottom: 32px; }
+  .modal-close { padding: 14px 40px; background: var(--obsidian); color: var(--cream); border: none; border-radius: 2px; font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; }
+
+  /* ── RESPONSIVE ── */
+  @media(max-width: 900px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    .section-inner { padding: 0 24px; }
+    .services-grid { grid-template-columns: 1fr 1fr; }
+    .masters-grid { grid-template-columns: 1fr 1fr; }
+    .booking-layout { grid-template-columns: 1fr; }
+    .booking-summary { position: static; }
+    .stats-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+    .master-mini-grid { grid-template-columns: 1fr 1fr; }
+    .footer-top { grid-template-columns: 1fr 1fr; gap: 40px; }
+    section { padding: 80px 0; }
+  }
+  @media(max-width: 600px) {
+    .services-grid { grid-template-columns: 1fr; }
+    .masters-grid { grid-template-columns: 1fr 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .time-slots { grid-template-columns: repeat(3,1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a class="nav-logo" href="#">MN Studio</a>
+  <ul class="nav-links">
+    <li><a href="#services">Услуги</a></li>
+    <li><a href="#masters">Мастера</a></li>
+    <li><a href="#reviews">Отзывы</a></li>
+    <li><a href="#booking">Запись</a></li>
+  </ul>
+  <a class="nav-cta" href="#booking">Записаться</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <canvas id="particles"></canvas>
+  <div style="position:relative; z-index:1; display:flex; flex-direction:column; align-items:center;">
+    <p class="hero-eyebrow">Студия красоты · Алматы</p>
+    <h1 class="hero-title">MN<br><span>Studio</span></h1>
+    <p class="hero-subtitle">Выходишь не просто красивой — выходишь счастливой</p>
+    <div class="hero-actions">
+      <a class="btn-primary" href="#booking">Записаться онлайн</a>
+      <a class="btn-outline" href="#services">Наши услуги</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span>Прокрутить</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-strip">
+  <div class="stats-grid">
+    <div>
+      <div class="stat-num" data-target="10">0</div>
+      <div class="stat-label">Мастеров</div>
+    </div>
+    <div>
+      <div class="stat-num" data-target="8">0</div>
+      <div class="stat-label">Направлений</div>
+    </div>
+    <div>
+      <div class="stat-num" data-target="4.9">0</div>
+      <div class="stat-label">Средний рейтинг</div>
+    </div>
+    <div>
+      <div class="stat-num" data-target="500">0</div>
+      <div class="stat-label">Довольных клиентов</div>
+    </div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-inner">
+    <p class="section-eyebrow">Что мы делаем</p>
+    <h2 class="section-title">Полный уход<br><strong>в одном месте</strong></h2>
+    <div class="divider"></div>
+    <div class="services-grid">
+      <div class="service-card" onclick="selectService('Маникюр', this)">
+        <div class="service-icon">💅</div>
+        <div class="service-name">Маникюр</div>
+        <div class="service-desc">Классика, гель-лак, наращивание, дизайн ногтей. Форма идеальная, покрытие ровное.</div>
+        <div class="service-price">от 5 000 ₸</div>
+      </div>
+      <div class="service-card" onclick="selectService('Педикюр', this)">
+        <div class="service-icon">🦶</div>
+        <div class="service-name">Педикюр</div>
+        <div class="service-desc">Аппаратный и классический педикюр с покрытием и без.</div>
+        <div class="service-price">от 6 000 ₸</div>
+      </div>
+      <div class="service-card" onclick="selectService('Волосы', this)">
+        <div class="service-icon">✂️</div>
+        <div class="service-name">Волосы</div>
+        <div class="service-desc">Стрижки, окрашивание, нанопластика, ботокс для волос, укладки для любого события.</div>
+        <div class="service-price">от 8 000 ₸</div>
+      </div>
+      <div class="service-card" onclick="selectService('Ресницы', this)">
+        <div class="service-icon">👁️</div>
+        <div class="service-name">Ресницы</div>
+        <div class="service-desc">Наращивание ресниц: лёгкие, натуральные, идеально подобранные под форму глаз.</div>
+        <div class="service-price">от 9 000 ₸</div>
+      </div>
+      <div class="service-card" onclick="selectService('Депиляция', this)">
+        <div class="service-icon">🌿</div>
+        <div class="service-name">Депиляция</div>
+        <div class="service-desc">Безболезненная депиляция воском и сахаром. Быстро и качественно.</div>
+        <div class="service-price">от 3 000 ₸</div>
+      </div>
+      <div class="service-card" onclick="selectService('Косметология', this)">
+        <div class="service-icon">✨</div>
+        <div class="service-name">Косметология</div>
+        <div class="service-desc">Чистки лица, ботокс, липолитики, перманентный макияж бровей и губ.</div>
+        <div class="service-price">от 15 000 ₸</div>
+      </div>
+      <div class="service-card" onclick="selectService('Макияж', this)">
+        <div class="service-icon">💄</div>
+        <div class="service-name">Макияж</div>
+        <div class="service-desc">Свадебный, вечерний и повседневный макияж. Укладка за полчаса.</div>
+        <div class="service-price">от 12 000 ₸</div>
+      </div>
+      <div class="service-card" onclick="selectService('Брови', this)">
+        <div class="service-icon">🎨</div>
+        <div class="service-name">Брови</div>
+        <div class="service-desc">Архитектура, коррекция, окрашивание и перманентный макияж бровей.</div>
+        <div class="service-price">от 4 000 ₸</div>
+      </div>
+      <div class="service-card" onclick="selectService('Стилист', this)">
+        <div class="service-icon">🌸</div>
+        <div class="service-name">Образ целиком</div>
+        <div class="service-desc">Комплексный образ: укладка + макияж + ресницы. Для выпускных, свадеб и мероприятий.</div>
+        <div class="service-price">от 25 000 ₸</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MASTERS -->
+<section id="masters">
+  <div class="section-inner">
+    <div class="masters-intro">
+      <div>
+        <p class="section-eyebrow">Наша команда</p>
+        <h2 class="section-title">Мастера,<br><strong>которым доверяют</strong></h2>
+      </div>
+      <p style="font-size:14px; opacity:0.5; max-width:300px; line-height:1.7;">Каждый мастер — профессионал, влюблённый в своё дело. Делают аккуратно, быстро и с душой.</p>
+    </div>
+    <div class="masters-grid">
+      <div class="master-card" onclick="selectMaster('Маржан', 'Ресницы · Брови · Депиляция', this)">
+        <div class="master-avatar">М</div>
+        <div class="master-info">
+          <div class="master-name">Маржан</div>
+          <div class="master-spec">Ресницы · Брови · Депиляция</div>
+          <div class="master-rating">
+            <span class="stars">★★★★★</span>
+            <span class="master-reviews">50+ отзывов</span>
+          </div>
+          <span class="master-badge">Владелец студии</span>
+        </div>
+      </div>
+      <div class="master-card" onclick="selectMaster('Эля', 'Волосы · Стрижки · Окрашивание', this)">
+        <div class="master-avatar">Э</div>
+        <div class="master-info">
+          <div class="master-name">Эля</div>
+          <div class="master-spec">Волосы · Стрижки · Окрашивание</div>
+          <div class="master-rating">
+            <span class="stars">★★★★★</span>
+            <span class="master-reviews">30+ отзывов</span>
+          </div>
+          <span class="master-badge">Топ по волосам</span>
+        </div>
+      </div>
+      <div class="master-card" onclick="selectMaster('Марал', 'Стрижки · Укладки', this)">
+        <div class="master-avatar">М</div>
+        <div class="master-info">
+          <div class="master-name">Марал</div>
+          <div class="master-spec">Стрижки · Укладки</div>
+          <div class="master-rating">
+            <span class="stars">★★★★★</span>
+            <span class="master-reviews">15+ отзывов</span>
+          </div>
+        </div>
+      </div>
+      <div class="master-card" onclick="selectMaster('Айчорек', 'Маникюр · Педикюр', this)">
+        <div class="master-avatar">А</div>
+        <div class="master-info">
+          <div class="master-name">Айчорек</div>
+          <div class="master-spec">Маникюр · Педикюр</div>
+          <div class="master-rating">
+            <span class="stars">★★★★★</span>
+            <span class="master-reviews">25+ отзывов</span>
+          </div>
+          <span class="master-badge">Любимец клиентов</span>
+        </div>
+      </div>
+      <div class="master-card" onclick="selectMaster('Нургуль', 'Маникюр', this)">
+        <div class="master-avatar">Н</div>
+        <div class="master-info">
+          <div class="master-name">Нургуль</div>
+          <div class="master-spec">Маникюр</div>
+          <div class="master-rating">
+            <span class="stars">★★★★★</span>
+            <span class="master-reviews">20+ отзывов</span>
+          </div>
+        </div>
+      </div>
+      <div class="master-card" onclick="selectMaster('Айзада', 'Маникюр · Ногти', this)">
+        <div class="master-avatar">А</div>
+        <div class="master-info">
+          <div class="master-name">Айзада</div>
+          <div class="master-spec">Маникюр · Ногти</div>
+          <div class="master-rating">
+            <span class="stars">★★★★★</span>
+            <span class="master-reviews">10+ отзывов</span>
+          </div>
+        </div>
+      </div>
+      <div class="master-card" onclick="selectMaster('Гаухар', 'Педикюр', this)">
+        <div class="master-avatar">Г</div>
+        <div class="master-info">
+          <div class="master-name">Гаухар</div>
+          <div class="master-spec">Педикюр</div>
+          <div class="master-rating">
+            <span class="stars">★★★★★</span>
+            <span class="master-reviews">8+ отзывов</span>
+          </div>
+        </div>
+      </div>
+      <div class="master-card" onclick="selectMaster('Лязат', 'Косметология · Перманентный макияж', this)">
+        <div class="master-avatar">Л</div>
+        <div class="master-info">
+          <div class="master-name">Лязат</div>
+          <div class="master-spec">Косметология · Перманентный макияж</div>
+          <div class="master-rating">
+            <span class="stars">★★★★★</span>
+            <span class="master-reviews">12+ отзывов</span>
+          </div>
+          <span class="master-badge">Косметолог</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING -->
+<section id="booking">
+  <div class="section-inner">
+    <p class="section-eyebrow">Онлайн-запись</p>
+    <h2 class="section-title">Запишитесь<br><strong>за 2 минуты</strong></h2>
+    <div class="divider"></div>
+    <div class="booking-layout">
+      <div class="booking-steps">
+
+        <!-- Step 1 -->
+        <div class="step active" id="step1">
+          <div class="step-header">
+            <div class="step-num">1</div>
+            <div class="step-title">Выберите услугу</div>
+          </div>
+          <div class="service-pills">
+            <div class="pill" onclick="chooseService('Маникюр', this)">💅 Маникюр</div>
+            <div class="pill" onclick="chooseService('Педикюр', this)">🦶 Педикюр</div>
+            <div class="pill" onclick="chooseService('Стрижка', this)">✂️ Стрижка</div>
+            <div class="pill" onclick="chooseService('Окрашивание', this)">🎨 Окрашивание</div>
+            <div class="pill" onclick="chooseService('Нанопластика', this)">✨ Нанопластика</div>
+            <div class="pill" onclick="chooseService('Ресницы', this)">👁️ Ресницы</div>
+            <div class="pill" onclick="chooseService('Депиляция', this)">🌿 Депиляция</div>
+            <div class="pill" onclick="chooseService('Косметология', this)">🌟 Косметология</div>
+            <div class="pill" onclick="chooseService('Макияж', this)">💄 Макияж</div>
+            <div class="pill" onclick="chooseService('Брови', this)">🎭 Брови</div>
+            <div class="pill" onclick="chooseService('Укладка', this)">💇 Укладка</div>
+            <div class="pill" onclick="chooseService('Образ целиком', this)">🌸 Образ целиком</div>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step" id="step2">
+          <div class="step-header">
+            <div class="step-num">2</div>
+            <div class="step-title">Выберите мастера</div>
+          </div>
+          <div class="master-mini-grid" id="masterGrid">
+            <!-- filled by JS -->
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="step" id="step3">
+          <div class="step-header">
+            <div class="step-num">3</div>
+            <div class="step-title">Выберите дату и время</div>
+          </div>
+          <div class="calendar">
+            <div class="cal-header">
+              <button class="cal-nav" onclick="changeMonth(-1)">‹</button>
+              <div class="cal-month" id="calMonthLabel"></div>
+              <button class="cal-nav" onclick="changeMonth(1)">›</button>
+            </div>
+            <div class="cal-grid" id="calGrid"></div>
+          </div>
+          <div class="time-slots" id="timeSlots" style="margin-top:20px;"></div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="step" id="step4">
+          <div class="step-header">
+            <div class="step-num">4</div>
+            <div class="step-title">Ваши данные</div>
+          </div>
+          <div class="contact-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Имя</label>
+                <input type="text" id="clientName" placeholder="Ваше имя">
+              </div>
+              <div class="form-group">
+                <label>Телефон</label>
+                <input type="tel" id="clientPhone" placeholder="+7 (___) ___-__-__">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Комментарий (необязательно)</label>
+              <input type="text" id="clientComment" placeholder="Пожелания, референс, особые просьбы...">
+            </div>
+            <button class="btn-primary" onclick="submitBooking()" style="width:100%; padding:16px; font-size:13px; letter-spacing:0.12em; border:none; cursor:pointer; margin-top:8px;">Подтвердить запись</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- SUMMARY -->
+      <div class="booking-summary">
+        <div class="summary-title">Ваша запись</div>
+        <div class="summary-row">
+          <span class="summary-label">Услуга</span>
+          <span class="summary-value" id="sum-service"><span class="summary-empty">не выбрано</span></span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">Мастер</span>
+          <span class="summary-value" id="sum-master"><span class="summary-empty">не выбрано</span></span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">Дата</span>
+          <span class="summary-value" id="sum-date"><span class="summary-empty">не выбрано</span></span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">Время</span>
+          <span class="summary-value" id="sum-time"><span class="summary-empty">не выбрано</span></span>
+        </div>
+        <div style="margin-top:20px; padding: 16px; background:rgba(201,169,110,0.08); border-radius:4px; font-size:12px; opacity:0.6; line-height:1.8;">
+          📍 мкр. Думан-2, 57/2, цокольный этаж<br>
+          💬 <a href="https://wa.me/77064078261" target="_blank" rel="noopener" style="color:var(--gold);opacity:1;">Написать в WhatsApp</a><br>
+          🕐 Ежедневно с 10:00 до 22:00
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section id="reviews">
+  <div class="section-inner">
+    <p class="section-eyebrow">Отзывы</p>
+    <h2 class="section-title">Говорят<br><strong>наши клиенты</strong></h2>
+  </div>
+  <div class="reviews-track-wrap" style="margin-top:60px;">
+    <div class="reviews-track" id="reviewsTrack"></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand-name">MN Studio</div>
+        <p class="footer-tagline">Студия красоты в Алматы, где каждая деталь продумана для вашего комфорта. Выходишь не просто красивой — выходишь счастливой.</p>
+      </div>
+      <div>
+        <div class="footer-col-title">Услуги</div>
+        <ul class="footer-links">
+          <li><a href="#services">Маникюр & Педикюр</a></li>
+          <li><a href="#services">Волосы</a></li>
+          <li><a href="#services">Ресницы</a></li>
+          <li><a href="#services">Косметология</a></li>
+          <li><a href="#services">Макияж</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Студия</div>
+        <ul class="footer-links">
+          <li><a href="#masters">Мастера</a></li>
+          <li><a href="#reviews">Отзывы</a></li>
+          <li><a href="#booking">Записаться</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Контакты</div>
+        <ul class="footer-links">
+          <li><a href="https://wa.me/77064078261" target="_blank" rel="noopener">WhatsApp</a></li>
+          <li><a href="https://instagram.com/marzhan_beauty_studio__" target="_blank" rel="noopener">Instagram</a></li>
+          <li><a href="https://2gis.kz/almaty/firm/70000001080483651" target="_blank" rel="noopener">2GIS</a></li>
+          <li><a href="https://2gis.kz/almaty/firm/70000001080483651" target="_blank" rel="noopener" style="color:var(--gold);opacity:1;">мкр. Думан-2, 57/2</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2026 MN Studio. Все права защищены.</span>
+      <div class="social-links">
+        <a class="social-link" href="https://instagram.com/marzhan_beauty_studio__" target="_blank" rel="noopener" title="Instagram">📷</a>
+        <a class="social-link" href="https://wa.me/77064078261" target="_blank" rel="noopener" title="WhatsApp">💬</a>
+        <a class="social-link" href="https://2gis.kz/almaty/firm/70000001080483651" target="_blank" rel="noopener" title="2GIS">📍</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- SUCCESS MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-icon">🌸</div>
+    <div class="modal-title">Запись подтверждена!</div>
+    <div class="modal-body" id="modalBody">Мы свяжемся с вами в WhatsApp для подтверждения записи. До встречи в MN Studio!</div>
+    <button class="modal-close" onclick="closeModal()">Закрыть</button>
+  </div>
+</div>
+
+<script>
+// ── PARTICLES ──
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [];
+function resize(){ W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+resize(); window.addEventListener('resize', resize);
+for(let i=0;i<80;i++) particles.push({
+  x: Math.random()*2000, y: Math.random()*900,
+  r: Math.random()*1.5+0.3, vx:(Math.random()-0.5)*0.15, vy:-Math.random()*0.2-0.05,
+  o: Math.random()*0.5+0.1
+});
+function drawParticles(){
+  ctx.clearRect(0,0,W,H);
+  particles.forEach(p=>{
+    ctx.beginPath(); ctx.arc(p.x%W,(p.y+H)%H,p.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(201,169,110,${p.o})`; ctx.fill();
+    p.x+=p.vx; p.y+=p.vy;
+    if(p.y<-10) p.y=H+10;
+  });
+  requestAnimationFrame(drawParticles);
+}
+drawParticles();
+
+// ── NAV SCROLL ──
+window.addEventListener('scroll',()=>{
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// ── STATS COUNTER ──
+const observerStats = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      document.querySelectorAll('[data-target]').forEach(el=>{
+        const target = parseFloat(el.dataset.target);
+        const isDecimal = target % 1 !== 0;
+        let start = 0; const dur = 1800; const startTime = performance.now();
+        function anim(now){
+          const p = Math.min((now-startTime)/dur,1);
+          const val = p * target;
+          el.textContent = isDecimal ? val.toFixed(1) : Math.round(val) + (target===500?'+':'');
+          if(p<1) requestAnimationFrame(anim);
+        }
+        requestAnimationFrame(anim);
+      });
+      observerStats.disconnect();
+    }
+  });
+},{threshold:0.5});
+observerStats.observe(document.querySelector('.stats-strip'));
+
+// ── SERVICE SELECT (from #services cards) ──
+function selectService(name, card){
+  document.querySelectorAll('.service-card').forEach(c=>c.classList.remove('active'));
+  card.classList.add('active');
+  document.getElementById('booking').scrollIntoView({behavior:'smooth'});
+  setTimeout(()=>chooseServiceByName(name),400);
+}
+
+// ── MASTER SELECT (from #masters) ──
+function selectMaster(name, spec, card){
+  document.querySelectorAll('.master-card').forEach(c=>c.classList.remove('active'));
+  card.classList.add('active');
+}
+
+// ── BOOKING STATE ──
+let booking = { service: null, master: null, date: null, time: null };
+const MASTERS = {
+  'Маникюр': [
+    {name:'Айчорек', spec:'Маникюр · Педикюр'},
+    {name:'Нургуль', spec:'Маникюр'},
+    {name:'Айзада', spec:'Маникюр · Ногти'},
+  ],
+  'Педикюр': [
+    {name:'Гаухар', spec:'Педикюр'},
+    {name:'Айчорек', spec:'Маникюр · Педикюр'},
+  ],
+  'Стрижка': [
+    {name:'Эля', spec:'Стрижки · Окрашивание'},
+    {name:'Марал', spec:'Стрижки · Укладки'},
+  ],
+  'Окрашивание': [
+    {name:'Эля', spec:'Окрашивание · Стрижки'},
+  ],
+  'Нанопластика': [
+    {name:'Эля', spec:'Нанопластика · Ботокс для волос'},
+    {name:'Марал', spec:'Стрижки · Укладки'},
+  ],
+  'Ресницы': [
+    {name:'Маржан', spec:'Ресницы · Брови'},
+  ],
+  'Депиляция': [
+    {name:'Маржан', spec:'Ресницы · Депиляция'},
+  ],
+  'Косметология': [
+    {name:'Лязат', spec:'Косметология · Перманент'},
+  ],
+  'Макияж': [
+    {name:'Марал', spec:'Укладки · Макияж'},
+    {name:'Маржан', spec:'Макияж · Образ'},
+  ],
+  'Брови': [
+    {name:'Маржан', spec:'Брови · Перманент'},
+    {name:'Лязат', spec:'Перманентный макияж'},
+  ],
+  'Укладка': [
+    {name:'Марал', spec:'Укладки · Стрижки'},
+    {name:'Эля', spec:'Укладки · Стрижки'},
+  ],
+  'Образ целиком': [
+    {name:'Маржан', spec:'Образ · Ресницы'},
+    {name:'Марал', spec:'Укладки'},
+    {name:'Лязат', spec:'Косметология'},
+  ],
+};
+
+function chooseServiceByName(name){
+  document.querySelectorAll('.pill').forEach(p=>{
+    if(p.textContent.includes(name)){ p.classList.add('selected'); chooseService(name,p); }
+  });
+}
+
+function chooseService(name, el){
+  document.querySelectorAll('.pill').forEach(p=>p.classList.remove('selected'));
+  el.classList.add('selected');
+  booking.service = name; booking.master = null; booking.date = null; booking.time = null;
+  updateSummary();
+  // fill masters
+  const masters = MASTERS[name] || [{name:'Маржан',spec:'Универсальный мастер'}];
+  const grid = document.getElementById('masterGrid');
+  grid.innerHTML = masters.map(m=>`
+    <div class="master-mini" onclick="chooseMaster('${m.name}','${m.spec}',this)">
+      <div class="master-mini-avatar">${m.name[0]}</div>
+      <div class="master-mini-name">${m.name}</div>
+      <div class="master-mini-spec">${m.spec}</div>
+    </div>
+  `).join('');
+  activateStep(2);
+}
+
+function chooseMaster(name, spec, el){
+  document.querySelectorAll('.master-mini').forEach(m=>m.classList.remove('selected'));
+  el.classList.add('selected');
+  booking.master = name;
+  updateSummary();
+  renderCalendar();
+  activateStep(3);
+}
+
+// ── CALENDAR ──
+let calYear, calMonth;
+const today = new Date();
+calYear = today.getFullYear(); calMonth = today.getMonth();
+const MONTHS_RU = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+const DAYS_RU = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+
+function changeMonth(dir){
+  calMonth += dir;
+  if(calMonth>11){calMonth=0;calYear++;}
+  if(calMonth<0){calMonth=11;calYear--;}
+  renderCalendar();
+}
+
+function renderCalendar(){
+  document.getElementById('calMonthLabel').textContent = MONTHS_RU[calMonth] + ' ' + calYear;
+  const grid = document.getElementById('calGrid');
+  grid.innerHTML = DAYS_RU.map(d=>`<div class="cal-dow">${d}</div>`).join('');
+  const firstDay = new Date(calYear, calMonth, 1).getDay();
+  const offset = firstDay===0 ? 6 : firstDay-1;
+  const days = new Date(calYear, calMonth+1, 0).getDate();
+  for(let i=0;i<offset;i++) grid.innerHTML += `<div class="cal-day empty"></div>`;
+  for(let d=1;d<=days;d++){
+    const dt = new Date(calYear,calMonth,d);
+    const isPast = dt < new Date(today.getFullYear(),today.getMonth(),today.getDate());
+    const isToday = dt.toDateString()===today.toDateString();
+    const isSel = booking.date && new Date(booking.date).toDateString()===dt.toDateString();
+    const cls = [isPast?'past':'',isToday?'today':'',isSel?'selected':''].filter(Boolean).join(' ');
+    grid.innerHTML += `<div class="cal-day ${cls}" onclick="${isPast?'':`pickDate(${calYear},${calMonth},${d})`}">${d}</div>`;
+  }
+}
+
+function pickDate(y,m,d){
+  booking.date = new Date(y,m,d);
+  booking.time = null;
+  renderCalendar();
+  renderTimeSlots();
+  updateSummary();
+}
+
+const ALL_SLOTS = ['10:00','10:30','11:00','11:30','12:00','12:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00','17:30','18:00','18:30','19:00','19:30'];
+const TAKEN_SLOTS = ['10:30','12:00','14:00','16:30','18:00'];
+
+function renderTimeSlots(){
+  const ts = document.getElementById('timeSlots');
+  ts.innerHTML = ALL_SLOTS.map(t=>{
+    const taken = TAKEN_SLOTS.includes(t);
+    return `<div class="time-slot${taken?' taken':''}" onclick="${taken?'':'pickTime(\''+t+'\',this)'}">${t}</div>`;
+  }).join('');
+}
+
+function pickTime(t, el){
+  document.querySelectorAll('.time-slot').forEach(s=>s.classList.remove('selected'));
+  el.classList.add('selected');
+  booking.time = t;
+  updateSummary();
+  activateStep(4);
+}
+
+// ── SUMMARY ──
+function updateSummary(){
+  const sv = document.getElementById('sum-service');
+  const sm = document.getElementById('sum-master');
+  const sd = document.getElementById('sum-date');
+  const st = document.getElementById('sum-time');
+  sv.innerHTML = booking.service || '<span class="summary-empty">не выбрано</span>';
+  sm.innerHTML = booking.master || '<span class="summary-empty">не выбрано</span>';
+  sd.innerHTML = booking.date ? booking.date.toLocaleDateString('ru-RU',{day:'numeric',month:'long'}) : '<span class="summary-empty">не выбрано</span>';
+  st.innerHTML = booking.time || '<span class="summary-empty">не выбрано</span>';
+}
+
+// ── STEPS ──
+function activateStep(n){
+  for(let i=1;i<=4;i++){
+    const s = document.getElementById('step'+i);
+    s.classList.remove('active','done');
+    if(i<n) s.classList.add('done');
+    if(i===n) s.classList.add('active');
+  }
+}
+
+// ── SUBMIT ──
+function submitBooking(){
+  const name = document.getElementById('clientName').value.trim();
+  const phone = document.getElementById('clientPhone').value.trim();
+  if(!name||!phone){ alert('Пожалуйста, введите имя и телефон'); return; }
+  if(!booking.service||!booking.master||!booking.date||!booking.time){
+    alert('Пожалуйста, заполните все шаги записи'); return;
+  }
+  const dateStr = booking.date.toLocaleDateString('ru-RU',{day:'numeric',month:'long'});
+  document.getElementById('modalBody').textContent = `${name}, ваша запись на ${booking.service} к мастеру ${booking.master} — ${dateStr} в ${booking.time}. Мы свяжемся с вами по номеру ${phone}.`;
+  document.getElementById('modalOverlay').classList.add('visible');
+}
+function closeModal(){
+  document.getElementById('modalOverlay').classList.remove('visible');
+  // reset
+  booking = {service:null,master:null,date:null,time:null};
+  updateSummary(); activateStep(1);
+  document.querySelectorAll('.pill,.master-mini').forEach(el=>el.classList.remove('selected'));
+  document.getElementById('clientName').value=''; document.getElementById('clientPhone').value=''; document.getElementById('clientComment').value='';
+  document.getElementById('timeSlots').innerHTML='';
+}
+
+// ── REVIEWS ──
+const REVIEWS = [
+  {text:'Маржан тате — просто волшебница. Ресницы аккуратные, лёгкие, идеально подобраны под форму глаз. Теперь только к ней!', author:'Арайлым Е.', date:'Апрель 2026'},
+  {text:'Мастер Айзада — всё настолько аккуратно, красиво и со вкусом. Во время каждого процесса спрашивала комфортно ли. Ногти 10/10!', author:'Dianmaq', date:'Май 2026'},
+  {text:'Сделала сложное окрашивание на мои натуральные волосы, осталась очень довольна. Цены приемлемые, буду приходить ещё.', author:'Дана Д.', date:'Март 2026'},
+  {text:'Выходишь не просто красивой, а счастливой. Редко встретишь место, где сочетаются талант, аккуратность и внимание к мелочам.', author:'Gulnara A.', date:'Май 2026'},
+  {text:'Айчорек деген мастер күшті жасайды. Прям долго тұрады, өз ісінің маманы! Обязательно приду ещё.', author:'Amina T.', date:'Март 2026'},
+  {text:'Нанопластиканы жасаттым, өте қатты ұнадым. Мастерге алғысым шексіз! Чистый и комфортный сервис.', author:'Zhadosh', date:'Февраль 2026'},
+  {text:'Маникюр всегда получается красивый и носится отлично. Очень приятная и внимательная. Рекомендую!', author:'Adele N.', date:'Апрель 2026'},
+  {text:'Прическа отлично держалась, несмотря на танцы и активность. Мастера на все руки — всё аккуратно, красиво и со вкусом!', author:'ai 🤍', date:'Май 2026'},
+  {text:'Спасибо мастеру Маржан за классную стрижку! Быстро, аккуратно, всё с учётом пожеланий по длине. Рекомендую.', author:'Владислава В.', date:'Май 2026'},
+  {text:'С центра летела к мастеру по рекомендации. Таких волос я никогда не видела — волосы стали лёгкими, они ожили.', author:'Инспектор Г.', date:'Март 2026'},
+];
+
+function buildReviews(){
+  const doubled = [...REVIEWS,...REVIEWS];
+  const track = document.getElementById('reviewsTrack');
+  track.innerHTML = doubled.map(r=>`
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <div class="review-text">"${r.text}"</div>
+      <div class="review-author">${r.author}</div>
+      <div class="review-date">${r.date}</div>
+    </div>
+  `).join('');
+}
+buildReviews();
+
+// init calendar rendering on step 3 activate
+renderCalendar();
+</script>
+</body>
+</html>
